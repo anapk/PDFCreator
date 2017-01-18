@@ -80,8 +80,9 @@ public class add_image extends Fragment {
                 if(imgFile.exists()){
                     
                     File pdfFile = new File(helper_pdf.actualPath(getActivity()));
+                    final String fileExtension = helper_pdf.actualPath(getActivity()).substring(helper_pdf.actualPath(getActivity()).lastIndexOf("."));
 
-                    if (pdfFile.exists()) {
+                    if (pdfFile.exists() && fileExtension.equals(".pdf")) {
 
                         title = sharedPref.getString("title", null);
 

@@ -50,7 +50,7 @@
 				android:layout_toStartOf="@+id/reflowButton"
 				android:contentDescription="@string/toggle_links"
 				android:background="@drawable/button"
-				android:src="@drawable/ic_link_variant_white_48dp"
+				app:srcCompat="@drawable/link_variant"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp"
 				android:scaleType="fitCenter" />
@@ -63,7 +63,7 @@
 				android:layout_toStartOf="@+id/outlineButton"
 				android:contentDescription="@string/toggle_reflow_mode"
 				android:background="@drawable/button"
-				android:src="@drawable/ic_pencil_white_48dp"
+				app:srcCompat="@drawable/pencil"
 				android:onClick="OnEditAnnotButtonClick"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp"
@@ -77,7 +77,7 @@
 				android:layout_toStartOf="@+id/searchButton"
 				android:contentDescription="@string/outline_title"
 				android:background="@drawable/button"
-				android:src="@drawable/ic_list"
+				app:srcCompat="@drawable/format_list_bulleted"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp"
 				android:scaleType="fitCenter" />
@@ -90,7 +90,7 @@
 				android:layout_toStartOf="@+id/moreButton"
 				android:contentDescription="@string/search_document"
 				android:background="@drawable/button"
-				android:src="@drawable/ic_magnify_white_48dp"
+				app:srcCompat="@drawable/magnify"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp"
 				android:scaleType="fitCenter" />
@@ -104,7 +104,7 @@
 				android:contentDescription="@string/more"
 				android:background="@drawable/button"
 				android:onClick="OnCopyTextButtonClick"
-				android:src="@drawable/ic_content_copy_white_48dp"
+				app:srcCompat="@drawable/content_copy"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp"
 				android:scaleType="fitCenter" />
@@ -125,7 +125,7 @@
 				android:contentDescription="@string/cancel"
 				android:background="@drawable/button"
 				android:onClick="OnCancelSearchButtonClick"
-				android:src="@drawable/ic_close_white_48dp"
+				app:srcCompat="@drawable/close"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp"
 				android:scaleType="fitCenter" />
@@ -151,7 +151,7 @@
 				android:layout_toStartOf="@+id/searchForward"
 				android:contentDescription="@string/search_backwards"
 				android:background="@drawable/button"
-				android:src="@drawable/ic_arrow_left_white_48dp"
+				app:srcCompat="@drawable/arrow_left"
 				android:scaleType="fitCenter"
 				android:layout_marginBottom="2dp"
 				android:layout_marginTop="2dp" />
@@ -164,7 +164,7 @@
 				android:layout_alignParentEnd="true"
 				android:contentDescription="@string/search_forwards"
 				android:background="@drawable/button"
-				android:src="@drawable/ic_arrow_right_white_48dp"
+				app:srcCompat="@drawable/arrow_right"
 				android:scaleType="fitCenter"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp" />
@@ -184,7 +184,7 @@
 				android:contentDescription="@string/cancel"
 				android:background="@drawable/button"
 				android:onClick="OnCancelMoreButtonClick"
-				android:src="@drawable/ic_close_white_48dp"
+				app:srcCompat="@drawable/close"
 				android:scaleType="fitCenter"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp" />
@@ -197,7 +197,7 @@
 				android:contentDescription="@string/highlight"
 				android:background="@drawable/button"
 				android:onClick="OnHighlightButtonClick"
-				android:src="@drawable/ic_format_color_fill_white_48dp"
+				app:srcCompat="@drawable/format_color_fill"
 				android:scaleType="fitCenter"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp" />
@@ -211,7 +211,7 @@
 				android:contentDescription="@string/underline"
 				android:background="@drawable/button"
 				android:onClick="OnUnderlineButtonClick"
-				android:src="@drawable/ic_format_vertical_align_bottom_white_48dp"
+				app:srcCompat="@drawable/format_underline"
 				android:scaleType="fitCenter"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp" />
@@ -225,7 +225,7 @@
 				android:contentDescription="@string/strike_out"
 				android:background="@drawable/button"
 				android:onClick="OnStrikeOutButtonClick"
-				android:src="@drawable/ic_format_vertical_align_center_white_48dp"
+				app:srcCompat="@drawable/format_strikethrough"
 				android:scaleType="fitCenter"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp" />
@@ -239,7 +239,7 @@
 				android:contentDescription="@string/ink"
 				android:background="@drawable/button"
 				android:onClick="OnInkButtonClick"
-				android:src="@drawable/ic_pencil_white_48dp"
+				app:srcCompat="@drawable/pencil"
 				android:scaleType="fitCenter"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp" />
@@ -260,7 +260,7 @@
 				android:contentDescription="@string/cancel"
 				android:background="@drawable/button"
 				android:onClick="OnCancelDeleteButtonClick"
-				android:src="@drawable/ic_close_white_48dp"
+				app:srcCompat="@drawable/close"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp"
 				android:scaleType="fitCenter" />
@@ -314,7 +314,7 @@
 				android:contentDescription="@string/cancel"
 				android:background="@drawable/button"
 				android:onClick="OnCancelAcceptButtonClick"
-				android:src="@drawable/ic_close_white_48dp"
+				app:srcCompat="@drawable/close"
 				android:layout_marginTop="2dp"
 				android:layout_marginBottom="2dp"
 				android:scaleType="fitCenter" />

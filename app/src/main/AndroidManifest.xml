@@ -19,6 +19,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>
@@ -60,8 +61,9 @@
 
         <activity
             android:name="com.artifex.mupdfdemo.MuPDFActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:screenOrientation="sensor"
+            android:launchMode="singleTop"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

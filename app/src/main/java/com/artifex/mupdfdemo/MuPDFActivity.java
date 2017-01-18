@@ -50,6 +50,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
+import com.itextpdf.text.exceptions.BadPasswordException;
+import com.itextpdf.text.pdf.PdfReader;
+
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -236,8 +239,7 @@ public class MuPDFActivity extends AppCompatActivity implements FilePicker.FileP
 		}
 	}
 
-	private MuPDFCore openFile(String path)
-	{
+	private MuPDFCore openFile(String path) {
 		int lastSlashPos = path.lastIndexOf('/');
 		mFileName = new String(lastSlashPos == -1
 					? path
@@ -263,8 +265,7 @@ public class MuPDFActivity extends AppCompatActivity implements FilePicker.FileP
 		return core;
 	}
 
-	private MuPDFCore openBuffer(byte buffer[], String magic)
-	{
+	private MuPDFCore openBuffer(byte buffer[], String magic) {
 		System.out.println("Trying to open byte buffer");
 		try
 		{
@@ -291,12 +292,16 @@ public class MuPDFActivity extends AppCompatActivity implements FilePicker.FileP
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 		PreferenceManager.setDefaultValues(this, R.xml.user_settings, false);
 		sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		sharedPref.edit().putString("menu", "yes").apply();
+		sharedPref.edit().putInt("startFragment", 0).apply();
+
+		android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+		if(actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
+		helper_pdf.toolbar(MuPDFActivity.this);
 
 		mAlertBuilder = new AlertDialog.Builder(this);
 		gAlertBuilder = mAlertBuilder;  //  keep a static copy of this that other classes can use
@@ -815,12 +820,11 @@ public class MuPDFActivity extends AppCompatActivity implements FilePicker.FileP
 			SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
 			SharedPreferences.Editor edit = prefs.edit();
 			edit.putInt("page"+mFileName, mDocView.getDisplayedViewIndex());
-			edit.commit();
+			edit.apply();
 		}
 	}
 
-	public void onDestroy()
-	{
+	public void onDestroy() {
 		if (mDocView != null) {
 			mDocView.applyToChildren(new ReaderView.ViewMapper() {
 				void applyToView(View view) {
@@ -855,40 +859,48 @@ public class MuPDFActivity extends AppCompatActivity implements FilePicker.FileP
 		if (core == null)
 			return;
 		if (!mButtonsVisible) {
-			mButtonsVisible = true;
-			// Update page number text and slider
-			int index = mDocView.getDisplayedViewIndex();
-			updatePageNumView(index);
-			mPageSlider.setMax((core.countPages()-1)*mPageSliderRes);
-			mPageSlider.setProgress(index * mPageSliderRes);
-			if (mTopBarMode == TopBarMode.Search) {
-				mSearchText.requestFocus();
-				showKeyboard();
+
+			try {
+				new PdfReader(helper_pdf.actualPath(MuPDFActivity.this));
+				mButtonsVisible = true;
+				// Update page number text and slider
+				int index = mDocView.getDisplayedViewIndex();
+				updatePageNumView(index);
+				mPageSlider.setMax((core.countPages()-1)*mPageSliderRes);
+				mPageSlider.setProgress(index * mPageSliderRes);
+				if (mTopBarMode == TopBarMode.Search) {
+					mSearchText.requestFocus();
+					showKeyboard();
+				}
+
+				Animation anim = new TranslateAnimation(0, 0, -mTopBarSwitcher.getHeight(), 0);
+				anim.setDuration(200);
+				anim.setAnimationListener(new Animation.AnimationListener() {
+					public void onAnimationStart(Animation animation) {
+						mTopBarSwitcher.setVisibility(View.VISIBLE);
+					}
+					public void onAnimationRepeat(Animation animation) {}
+					public void onAnimationEnd(Animation animation) {}
+				});
+				mTopBarSwitcher.startAnimation(anim);
+
+				anim = new TranslateAnimation(0, 0, mPageSlider.getHeight(), 0);
+				anim.setDuration(200);
+				anim.setAnimationListener(new Animation.AnimationListener() {
+					public void onAnimationStart(Animation animation) {
+						mPageSlider.setVisibility(View.VISIBLE);
+					}
+					public void onAnimationRepeat(Animation animation) {}
+					public void onAnimationEnd(Animation animation) {
+						mPageNumberView.setVisibility(View.VISIBLE);
+					}
+				});
+				mPageSlider.startAnimation(anim);
+			} catch (BadPasswordException e) {
+				System.out.println("PDF is password protected..");
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-
-			Animation anim = new TranslateAnimation(0, 0, -mTopBarSwitcher.getHeight(), 0);
-			anim.setDuration(200);
-			anim.setAnimationListener(new Animation.AnimationListener() {
-				public void onAnimationStart(Animation animation) {
-					mTopBarSwitcher.setVisibility(View.VISIBLE);
-				}
-				public void onAnimationRepeat(Animation animation) {}
-				public void onAnimationEnd(Animation animation) {}
-			});
-			mTopBarSwitcher.startAnimation(anim);
-
-			anim = new TranslateAnimation(0, 0, mPageSlider.getHeight(), 0);
-			anim.setDuration(200);
-			anim.setAnimationListener(new Animation.AnimationListener() {
-				public void onAnimationStart(Animation animation) {
-					mPageSlider.setVisibility(View.VISIBLE);
-				}
-				public void onAnimationRepeat(Animation animation) {}
-				public void onAnimationEnd(Animation animation) {
-					mPageNumberView.setVisibility(View.VISIBLE);
-				}
-			});
-			mPageSlider.startAnimation(anim);
 		}
 	}
 
@@ -949,6 +961,7 @@ public class MuPDFActivity extends AppCompatActivity implements FilePicker.FileP
 		if (core == null)
 			return;
 		mPageNumberView.setText(String.format("%d / %d", index + 1, core.countPages()));
+		helper_pdf.toolbar(MuPDFActivity.this);
 	}
 
 
@@ -1353,6 +1366,7 @@ public class MuPDFActivity extends AppCompatActivity implements FilePicker.FileP
 				final String fileName = path.substring(path.lastIndexOf("/")+1);
 				sharedPref.edit().putString("pathPDF", path).apply();
 				sharedPref.edit().putString("title", fileName).apply();
+				sharedPref.edit().putInt("startFragment", 3).apply();
 				Intent intent = new Intent(MuPDFActivity.this, MainActivity.class);
 				startActivity(intent);
 				finishAffinity();
@@ -1373,7 +1387,30 @@ public class MuPDFActivity extends AppCompatActivity implements FilePicker.FileP
 		if (id == R.id.action_folder) {
 			if (sharedPref.getString("menu", "").equals("yes")) {
 				String pathToEdit = sharedPref.getString("pathPDF", "");
-				helper_main.openFilePicker(MuPDFActivity.this,mDocView,pathToEdit);
+				helper_main.openFilePickerPDF(MuPDFActivity.this,mDocView,pathToEdit);
+			} else {
+				Snackbar snackbar = Snackbar
+						.make(mDocView, getString(R.string.action_folderPDF_toast), Snackbar.LENGTH_LONG)
+						.setAction(getString(R.string.toast_yes), new View.OnClickListener() {
+							@Override
+							public void onClick(View view) {
+								String folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+								helper_main.openFilePicker(MuPDFActivity.this, mDocView, Environment.getExternalStorageDirectory() + folder);
+							}
+						});
+				snackbar.show();
+			}
+		}
+
+		if (id == android.R.id.home) {
+			if (sharedPref.getString("menu", "").equals("yes")) {
+
+				final String fileName = path.substring(path.lastIndexOf("/")+1);
+				sharedPref.edit().putString("pathPDF", path).apply();
+				sharedPref.edit().putString("title", fileName).apply();
+				Intent intent = new Intent(MuPDFActivity.this, MainActivity.class);
+				startActivity(intent);
+				finishAffinity();
 			} else {
 				Snackbar snackbar = Snackbar
 						.make(mDocView, getString(R.string.action_folderPDF_toast), Snackbar.LENGTH_LONG)

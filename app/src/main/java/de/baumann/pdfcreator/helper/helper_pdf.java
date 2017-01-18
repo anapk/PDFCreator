@@ -142,7 +142,7 @@ public class helper_pdf {
         String text = title + " | " + textRotate;
         String text2 = activity.getString(R.string.toast_noPDF) + " | " + textRotate;
 
-        if (pdfFile.exists()) {
+        if (pdfFile.exists() && helper_pdf.actualPath(activity).contains(".pdf")) {
             textTitle.setText(text);
         } else {
             textTitle.setText(text2);

@@ -1,5 +1,6 @@
 ### v 2.5 (WIP)
-- improved MuPDF integration
+- improved: MuPDF integration
+- improved: icons (xml)
 
 ### v 2.4
 - added: PDF viewer support (muPDF)
